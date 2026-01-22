@@ -1,5 +1,5 @@
 # Kanban Board
-- Website : [kanban-board-ten-beta-21.vercel.app](kanban-board-ten-beta-21.vercel.app)
+- Website : https://kanban-board-ten-beta-21.vercel.app
 ## ER Diagram 
 ```mermaid
 erDiagram
