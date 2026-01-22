@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/auth/:path*",
+      "destination": "https://kanban-auth-5gxe.onrender.com/:path*"
+    },
+    {
+      "source": "/api/kanban/:path*",
+      "destination": "https://kanban-backend-kz2r.onrender.com/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

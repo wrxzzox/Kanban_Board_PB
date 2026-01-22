@@ -1,0 +1,84 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: kanban-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: kanban_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - kanban-network
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: kanban-auth
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: kanban_db
+      DB_PORT: 5432
+      JWT_SECRET: supersecret
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+    networks:
+      - kanban-network
+
+  kanban-service:
+    build:
+      context: ./kanban-service
+      dockerfile: Dockerfile
+    container_name: kanban-backend
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: kanban_db
+      DB_PORT: 5432
+      JWT_SECRET: supersecret
+    ports:
+      - "8082:8082"
+    depends_on:
+      - postgres
+    networks:
+      - kanban-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kanban-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
+      - kanban-service
+    networks:
+      - kanban-network
+
+  nginx:
+    image: nginx:latest
+    container_name: kanban-gateway
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - auth-service
+      - kanban-service
+    networks:
+      - kanban-network
+
+networks:
+  kanban-network:
+    driver: bridge

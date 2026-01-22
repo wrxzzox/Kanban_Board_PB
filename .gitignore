@@ -1,0 +1,31 @@
+# General
+.DS_Store
+.idea/
+.vscode/
+
+# Dependencies
+node_modules/
+vendor/
+
+# Environment Variables
+.env
+*.env
+
+# Build Artifacts
+dist/
+build/
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+main
+
+# Go
+auth-service/main
+kanban-service/main
+
+# Docker / Database
+postgres/data/
+__pycache__/
+*.log
